@@ -1,0 +1,104 @@
+
+b1 : tạo component Header
+---------------------------------------------------------------------------------------------------
+b2 : tạo 1 component button riêng cho Header.trong đó import 1 component CartIcon
+---------------------------------------------------------------------------------------------------
+b3 : trong folder Meals :
+    - thêm component SummaryMeals để hiển thị text giới thiệu
+    - thêm component AvailableMeals để map được listMeals,trong này chứa 1 DUMMY_MEALS
+    - thêm component Meals để chưa 2 component con trên
+---------------------------------------------------------------------------------------------------
+b4 : trong folder UI :
+    - thêm component Card để tạo khung bao
+    - sử dụng Card bao listMeals trong AvailableMeals
+---------------------------------------------------------------------------------------------------
+b5 : trong folder Meals tạo 1 sub folder MealsItem 
+    Trong folder MealsItem :
+    - thêm component MealsItem,để xử lý các item trong listMeals dùng props từ AvailableMeals chuyển qua
+    component này sẽ return thẻ <li> để thay thế các <li> trong component AvailableMeals
+    - thêm component MealsForm,thẻ này sẽ tạo các button Add và số lượng để thêm vào giỏ hàng
+    vì vậy phải lấy được id của từng item,truyền id của item trong component 
+    id từ AvailableMeals -> id MealsItem -> id MealsForm -> id Input
+    - component Input được thêm vào folder UI và thêm vào component MealsForm
+    - component MealsForm được tạo trong folder MealsItem
+---------------------------------------------------------------------------------------------------
+b6 : Trong folder Cart :
+    - tạo component Cart để chứa danh sách các iteam đã Add
+----------------------------------------------------------------------------------------------------
+b7 : dùng cổng Protal
+    - trong folder Public -> index.html -> thêm <div id="overlays"></div> (tạo 1 cổng kết nối mới)
+    - trong folder UI tạo component Modal :
+    - trong component Modal tạo thêm 2 component function là Backdrop và ModalOverlay
+    - component Backdrop làm mờ backgroup khi click giỏ hàng
+    - component ModalOverlay hiển thị giỏ hàng 
+        + để tạo cổng kết nối trong component Modal import ReactDOM
+        + return về 2 component Backdrop và ModalOverlay thông qua 
+        ReactDOM.CreateProtal(component, nơi hiển thị component ).
+        như vậy sẽ có 1 thẻ khác độc lập với thẻ root hiển trị giao diện
+    - bao component Cart bằng Modal
+    - gọi component Cart trong App
+----------------------------------------------------------------------------------------------------
+b8 : xử lí Open/Close Cart :
+
+    * Open Cart:
+        - ở App gọi useState và set giá trị ban đầu là false
+        - truyền hàm onClick từ thẻ <button> --> cpn ButtonCard -> cpn Header -> App và gọi hàm khi <button> được 
+        click thì setState = true ---> hiển thị Cart
+
+    * Close Cart : 
+        +)đóng khi click Close : 
+        - truyền hàm onClick từ thẻ <button> --> cpn Cart -> App và gọi hàm khi <button> được 
+        click thì setState = false ---> đóng Cart
+        +)đóng khi click backgroup : 
+        - truyền hàm onClick từ thẻ <button> --> cpn Backdrop -> cpn Modal -> App và gọi hàm khi <button> được 
+        click thì setState = false ---> đóng Cart
+----------------------------------------------------------------------------------------------------
+b9 : quản lý state với useContext
+
+    - Tạo folder store trong thư mục src :
+    - thêm file cart-context để khởi tạo 1 context
+      const cartContext = React.CreateContext({truyền 1 object có chứa các state cần cần khai báo})
+      export CartContext để component Provider kết nối tạo khung bao
+    - trong folder store thêm component cartProvider nó giống như nhà cung cấp có chức năng quản lý 
+      context hiện tại và có thể chia sẻ,kết nối đến các cpn khác bằng cách bao quanh component con
+    - trong component cartProvider :
+        +) import CartContext để có thể kết nối và tạo ra khung bao bọc 
+        +) khởi tạo 1 object cartContext giống object được truyền vào React.CreateContext để lưu trữ các state
+        +) khỏi tạo các function để tryền vào object đó
+        +) return về khung bao : <CartContext.Provider>{props.children}</CartContext.Provider>
+        +) trong thẻ đóng <cartContext.Provider value={cartContext}> truyền thuộc tính value chứa
+           object lưu trữ các state
+    - dùng khung bao là component CartProvider vừa tạo để bao component App,như vậy các component bên trong 
+      khung bao sẽ có thể kết nối được các state
+----------------------------------------------------------------------------------------------------
+b10 : Update số lượng items trên ButtonCard
+
+    - để update được số item trong giỏ hàng hiện ở button Header cần truyền được state items 
+      đến component ButtonCard
+    - ở component ButtonCard import component CartContext
+    - tạo kết nối với CartContext bằng cách dùng khai báo : 
+      const ctxCart = useContext(CartContext);
+      như vậy object quản lý các state ở component CartContext đã được trỏ tới component
+      ButtonCard qua ctxCart, ctxCart chính là object chứa các state
+    - dùng ctxCart.iteams.reduce() để lấy đc tổng các món hàng đã đặt cập nhập lên Header
+----------------------------------------------------------------------------------------------------
+b11: Khởi tạo các state bằng useReducer để đưu vào context quản lý
+    - Trong component CartProvider :
+        +) tạo 1 useReducer có state ban đầu là 
+           defaultCartState = {items : [], totalAmount : 0 }
+           và trả về các món ăn đc thêm trong giỏ và tổng số tiền trong giỏ hàng
+        +) gọi hàm cartReducer (state,action) sẽ tính tổng xử lý các state trên và return lại
+        +) trong fc addToCard gọi dispatch({items : item , type :'ADD_ITEM_CART'}); 
+           để truyền hàm này vào onClick trong mỗi lần ấn button ADD ở mỗi MealsItem,kết hợp ref và forword
+           để làm đc việc đó
+----------------------------------------------------------------------------------------------------
+b12 : Dùng useRef và Forword để truyền dữ liệu từ <input> --> component Input 
+    - để lấy được value của Amount để có thể add cart dùng useRef,dùng Forword truyền value 
+      từ <input> --> component Input 
+    - component Input được gọi trong component MealsForm , button ADD ở ở component MealsForm,vì vậy thêm sự 
+      kiện onClick vào button ADD,truyền con trỏ hàm handerSubmit(enteredAmountNumber) có tham số là value
+      vừa lấy được ở input đến component MealsForm,truyền con trỏ hàm đến MealsItem,ở đây gọi useContext
+    - trong component MealsItem
+      gọi useContext 
+      gọi onAddToCart khi click Add --> gọi addToCartHandler(item) qua useContext
+      --> gọi dispatchCart --> state update , component re-render
