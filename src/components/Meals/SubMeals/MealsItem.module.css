@@ -2,8 +2,17 @@
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid #ccc;
+  width: 100%;
 }
 .meal {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    margin: 1rem;
+    padding-bottom: 1rem;
+    width: 70%;
+  }
+  .mealTotal {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -24,4 +33,19 @@
     font-weight: bold;
     color: #ad5502;
     font-size: 1.25rem;
+  }
+  .div-item{
+    display: flex;
+    width : 40%;
+  }
+  .div-img{
+    text-align: center; 
+    margin: auto 0;
+   
+  }
+  .src-img{
+    width: 120px;
+    height: 90px;
+    object-fit: cover;
+    border-radius: 15px;
   }

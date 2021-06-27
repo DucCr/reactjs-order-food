@@ -63,3 +63,19 @@
   background-color: #8a2b06;
   color: white;
 }
+.div-item{
+  display: flex;
+  width : 60%;
+  justify-content: space-between;
+}
+.div-img{
+  text-align: center; 
+  margin: auto 0;
+ 
+}
+.src-img{
+  width: 100px;
+  height: 75px;
+  object-fit: cover;
+  border-radius: 15px;
+}

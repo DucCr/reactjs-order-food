@@ -26,7 +26,7 @@ const ButtonCart = (props) => {
         const timer = setTimeout(() => {
             setBtnIsHighlighted(false);
         }, 300);
-
+        //cleanup chạy khi mà component unmount
         return () => {
             clearTimeout(timer);
         };

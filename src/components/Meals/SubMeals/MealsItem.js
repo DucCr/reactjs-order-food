@@ -19,18 +19,24 @@ const MealsItem = props => {
             id : props.id,
             name : props.name,
             amount : amount,
-            price : props.price
+            price : props.price,
+            srcImg : props.srcImg, 
         }) 
     }
     
     return(
         <li className={classes['meal-form']}>
-            <div className={classes.meal}>
-                <h3>{props.name}</h3>
-                <div className={classes.description}>{props.description}</div>
-                <div className={classes.price}>${price}</div>
+            <div className={classes['div-item']}>
+                <div className={classes.meal}>
+                    <h3>{props.name}</h3>
+                    <div className={classes.description}>{props.description}</div>
+                    <div className={classes.price}>${price}</div>
+                </div>
+                <div className={classes['div-img']}>
+                    <img className={classes['src-img']} src={props.srcImg} />
+                </div>
             </div>
-            <div className={classes.meal}>
+            <div className={classes.mealTotal}>
                 <MealsForm submitHandler={onAddToCart} id={props.id} />
             </div>
         </li>
